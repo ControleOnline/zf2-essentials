@@ -30,7 +30,7 @@ class DiscoveryRoute {
         }
         $qtde = count($params);
         for ($i = 0; $i < $qtde; $i += 2) {
-            $request->getQuery()->set($params[$i], $params[$i + 1]);
+            $request->getQuery()->set($params[$i], isset($params[$i + 1]) ? $params[$i + 1] : null);
         }
     }
 
@@ -41,8 +41,15 @@ class DiscoveryRoute {
             $return['action'] = lcfirst($this->camelCase((isset($routes[2]) ? $routes[2] : $options['action'])));
             $return['controller'] = $return['module'] . '\Controller\\' . $this->camelCase((isset($routes[1]) ? $routes[1] : $options['controller']));
             if (!class_exists($return['controller'] . 'Controller')) {
+
                 $return = $options;
                 $return['controller'] = $options['module'] . '\Controller\\' . $options['controller'];
+            } else {
+                $class = $return['controller'] . 'Controller';
+                $testClass = new $class();
+                if (!method_exists($testClass, $return['action'] . 'Action')) {
+                    $return['action'] = $options['action'];
+                }
             }
         } else {
             $return['controller'] = $options['module'] . '\Controller\\' . $options['controller'];
