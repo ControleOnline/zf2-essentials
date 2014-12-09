@@ -35,7 +35,7 @@ $config = array(
 );
 ```
 ### Zend 2 ###
-In your config/application.config.php confiruração add the following:
+In your config/application.config.php confiruration add the following:
 
 ```
 <?php
