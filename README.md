@@ -58,7 +58,6 @@ return array(
 In your module.config.php file:
 
 ```
-
 <?php
 namespace YourNameSpace;
 
@@ -67,4 +66,21 @@ return array(
                 //Configs of ZF2Essentials here
          )
 );
+```
+
+## Usage ##
+
+### Ajax ###
+Get return from your Controller via Ajax:
+```
+$.ajax({
+    headers: {
+        Accept: "application/json; charset=utf-8",
+        "Content-Type": "application/json; charset=utf-8"
+    },
+    url:'http://localhost/<Module>/<Controller>/<Action>/<Parameters>',
+    data: "data",
+    success: function (response) {
+        console.log(response);
+    }});
 ```
