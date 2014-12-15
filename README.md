@@ -31,7 +31,8 @@ Add these lines to your composer.json:
 ```
 <?php
 $config = array(
-        'APP_ENV' => 'production', //Default configs to production or development        
+        'APP_ENV' => 'production', //Default configs to production or development      
+        'jsonStrategy' => true, // Default True 
 );
 ```
 ### Zend 2 ###

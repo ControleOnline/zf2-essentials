@@ -16,15 +16,12 @@ class DiscoveryRoute {
     }
 
     public function setGetParams($url, $request, $route) {
-
-        $url = explode('/', $url);
-        $route = explode('\\', $route['controller']);
-        foreach ($url as $key => $u) {
-            if ($key < 3) {
-                if (strtolower($u) != strtolower($route[$key])) {
-                    $params[] = $u;
-                }
-            } else {
+        $routes = explode('\\', $route['controller']);
+        $params = array();
+        foreach (explode('/', $url) as $key => $u) {
+            if ($key < 3 && (isset($routes[$key]) && strtolower($u) != strtolower($routes[$key]))) {
+                $params[] = $u;
+            } elseif ($key >= 3) {
                 $params[] = $u;
             }
         }
@@ -37,11 +34,12 @@ class DiscoveryRoute {
     protected function discoveryRoute($alias, $options) {
         $routes = explode('/', $alias);
         if (!empty(array_filter($routes))) {
+
             $return['module'] = $this->camelCase((isset($routes[0]) ? $routes[0] : $options['module']));
             $return['action'] = lcfirst($this->camelCase((isset($routes[2]) ? $routes[2] : $options['action'])));
             $return['controller'] = $return['module'] . '\Controller\\' . $this->camelCase((isset($routes[1]) ? $routes[1] : $options['controller']));
-            if (!class_exists($return['controller'] . 'Controller')) {
 
+            if (!class_exists($return['controller'] . 'Controller')) {
                 $return = $options;
                 $return['controller'] = $options['module'] . '\Controller\\' . $options['controller'];
             } else {

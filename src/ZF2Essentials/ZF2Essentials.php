@@ -42,7 +42,7 @@ class ZF2Essentials implements RouteInterface {
         $alias = trim($path, '/');
         $discovery = new DiscoveryRoute();
         $options = $discovery->getRoute($alias, $this->defaults);
-        $discovery->setGetParams($alias,$request,$options);
+        $discovery->setGetParams($alias, $request, $options);
         return new RouteMatch($options);
     }
 
