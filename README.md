@@ -12,12 +12,6 @@ This software aims to be engaged in any system and without any additional line p
 Add these lines to your composer.json:
 
 ```
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "git@github.com:ControleOnline/zf2-essentials.git"
-        }
-    ],
     "require": {
         "controleonline/zf2-essentials": "*"        
     }
