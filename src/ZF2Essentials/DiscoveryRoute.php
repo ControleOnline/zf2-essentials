@@ -32,8 +32,8 @@ class DiscoveryRoute {
     }
 
     protected function discoveryRoute($alias, $options) {
-        $routes = explode('/', $alias);
-        if (!empty(array_filter($routes))) {
+        $routes = array_filter(explode('/', $alias));
+        if (!empty($routes)) {
 
             $return['module'] = $this->camelCase((isset($routes[0]) ? $routes[0] : $options['module']));
             $return['action'] = lcfirst($this->camelCase((isset($routes[2]) ? $routes[2] : $options['action'])));
