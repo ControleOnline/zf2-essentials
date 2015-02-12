@@ -12,6 +12,7 @@ class Module {
 
     protected $sm;
     protected $config;
+    protected $em;
 
     public function getDefaultConfig($config) {
         $config['jsonStrategy'] = (isset($config['jsonStrategy']) ? $config['jsonStrategy'] : true);
@@ -19,9 +20,9 @@ class Module {
     }
 
     public function onBootstrap(MvcEvent $e) {
-
-
         $this->sm = $e->getApplication()->getServiceManager();
+        //$this->em = $this->sm->get('doctrine.entitymanager.orm_default');
+        $this->em = $this->sm->get('Doctrine\ORM\EntityManager');
         $config = $this->sm->get('config');
 
         $this->config = $this->getDefaultConfig(
@@ -33,6 +34,12 @@ class Module {
         $moduleRouteListener = new ModuleRouteListener();
         $moduleRouteListener->attach($eventManager);
         $this->setResponseType($e);
+
+        $entity = new DiscoveryEntity($this->em);
+        $entity->checkEntities();
+        
+        $records = $this->em->getRepository("\Entities\User")->findAll();        
+        print_r($records);
     }
 
     public function finishJsonStrategy($e) {

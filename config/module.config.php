@@ -20,5 +20,20 @@ return array(
                 ),
             )
         )
-    )
+    ),
+    // Doctrine configuration
+    'doctrine' => array(
+        'driver' => array(
+            'Entities' => array(
+                'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
+                'cache' => 'array',
+                'paths' => array(getcwd() . DIRECTORY_SEPARATOR . 'entity')
+            ),
+            'orm_default' => array(
+                'drivers' => array(
+                    'Entities' => 'Entities'
+                ),
+            ),
+        ),
+    ),
 );

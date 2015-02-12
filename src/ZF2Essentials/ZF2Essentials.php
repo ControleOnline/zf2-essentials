@@ -13,7 +13,7 @@ class ZF2Essentials implements RouteInterface {
 
     protected $defaults = array();
 
-    public function __construct(array $defaults = array()) {
+    public function __construct(array $defaults = array()) {        
         $this->defaults = $defaults;
     }
 
