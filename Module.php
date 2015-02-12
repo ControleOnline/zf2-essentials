@@ -21,7 +21,6 @@ class Module {
 
     public function onBootstrap(MvcEvent $e) {
         $this->sm = $e->getApplication()->getServiceManager();
-        //$this->em = $this->sm->get('doctrine.entitymanager.orm_default');
         $this->em = $this->sm->get('Doctrine\ORM\EntityManager');
         $config = $this->sm->get('config');
 
@@ -35,11 +34,11 @@ class Module {
         $moduleRouteListener->attach($eventManager);
         $this->setResponseType($e);
 
-        $entity = new DiscoveryEntity($this->em);
-        $entity->checkEntities();
-        
-        $records = $this->em->getRepository("\Entities\User")->findAll();        
-        print_r($records);
+        if (isset($config['doctrine']['connection']['orm_default']['params'])) {
+            $dbConfig = $config['doctrine']['connection']['orm_default']['params'];
+            $entity = new DiscoveryEntity($this->em, $dbConfig);
+            $entity->checkEntities();
+        }
     }
 
     public function finishJsonStrategy($e) {

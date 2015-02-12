@@ -26,7 +26,7 @@ class ZF2Essentials implements RouteInterface {
 
         if (!isset($options['defaults'])) {
             $options['defaults'] = array();
-        }
+        }        
 
         return new static($options['defaults']);
     }

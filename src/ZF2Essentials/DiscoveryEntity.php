@@ -7,28 +7,28 @@ class DiscoveryEntity {
     private $em;
     private $entityFolder;
     private $namespace;
+    private $dbConfig;
 
-    public function __construct($em) {
-        $this->em = $this->em;
+    public function __construct($em, $dbConfig) {
+        $this->em = $em;
         $this->entityFolder = getcwd() . DIRECTORY_SEPARATOR . 'entity';
         $this->namespace = 'Entities';
+        $this->dbConfig = $dbConfig;
     }
 
     public function prepareFolder() {
-
         is_dir($this->entityFolder)? : mkdir($this->entityFolder, 0777, true);
         is_dir($this->entityFolder . DIRECTORY_SEPARATOR . 'proxies')? : mkdir($this->entityFolder . DIRECTORY_SEPARATOR . 'proxies', 0777, true);
     }
 
-    private function getDbConfigs() {
+    private function getDbConfigs() {                
         return array(
             'driver' => 'pdo_mysql',
-            'host' => 'localhost',
-            'port' => '3306',
-            'user' => 'vagrant',
-            'password' => 'vagrant',
-            'dbname' => 'vagrant',
-            'charset' => 'utf8',
+            'host' => $this->dbConfig['host'],
+            'port' => $this->dbConfig['port'],
+            'user' => $this->dbConfig['user'],
+            'password' => $this->dbConfig['password'],
+            'dbname' => $this->dbConfig['dbname']            
         );
     }
 
@@ -44,9 +44,10 @@ class DiscoveryEntity {
     }
 
     public function checkEntities() {
+        $this->configure();
         if (!is_dir($this->entityFolder)) {
             $this->prepareFolder();
-            $this->configure();
+
             /*
               // custom datatypes (not mapped for reverse engineering)
               $this->em->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping('set', 'string');
