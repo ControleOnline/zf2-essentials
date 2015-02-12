@@ -12,7 +12,7 @@ class DiscoveryEntity {
     public function __construct($em, $dbConfig) {
         $this->em = $em;
         $this->entityFolder = getcwd() . DIRECTORY_SEPARATOR . 'entity';
-        $this->namespace = 'Entities';
+        $this->namespace = 'Entities\\';
         $this->dbConfig = $dbConfig;
     }
 
