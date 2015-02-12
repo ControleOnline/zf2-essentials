@@ -29,13 +29,39 @@ $config = array(
         'jsonStrategy' => true, // Default True 
 );
 ```
+
+### Configure DB ###
+In your config/autoload/database.local.php confiruration add the following:
+
+```
+<?php
+return array(
+    'doctrine' => array(
+        'connection' => array(
+            'orm_default' => array(
+                'driverClass' => 'Doctrine\DBAL\Driver\PDOMySql\Driver',
+                'params' => array(
+                    'host' => 'localhost',
+                    'port' => '3306',
+                    'user' => 'user',
+                    'password' => 'pass',
+                    'dbname' => 'db',
+                    'driver' => 'pdo_mysql'
+                )
+            )
+        )
+    )
+);
+```
+
+
 ### Zend 2 ###
 In your config/application.config.php confiruration add the following:
 
 ```
 <?php
 $modules = array(
-    'ZF2Essentials'
+    'ZF2Essentials' //Must be the first
 );
 return array(
     'modules' => $modules,
