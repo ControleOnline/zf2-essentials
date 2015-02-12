@@ -21,14 +21,14 @@ class DiscoveryEntity {
         is_dir($this->entityFolder . DIRECTORY_SEPARATOR . 'proxies')? : mkdir($this->entityFolder . DIRECTORY_SEPARATOR . 'proxies', 0777, true);
     }
 
-    private function getDbConfigs() {                
+    private function getDbConfigs() {
         return array(
             'driver' => 'pdo_mysql',
             'host' => $this->dbConfig['host'],
             'port' => $this->dbConfig['port'],
             'user' => $this->dbConfig['user'],
             'password' => $this->dbConfig['password'],
-            'dbname' => $this->dbConfig['dbname']            
+            'dbname' => $this->dbConfig['dbname']
         );
     }
 
@@ -44,10 +44,9 @@ class DiscoveryEntity {
     }
 
     public function checkEntities() {
-        $this->configure();
         if (!is_dir($this->entityFolder)) {
             $this->prepareFolder();
-
+            $this->configure();
             /*
               // custom datatypes (not mapped for reverse engineering)
               $this->em->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping('set', 'string');
