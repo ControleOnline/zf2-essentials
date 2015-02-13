@@ -1,4 +1,8 @@
 [![Build Status](https://travis-ci.org/ControleOnline/zf2-essentials.svg)](https://travis-ci.org/ControleOnline/zf2-essentials)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ControleOnline/zf2-essentials/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/ControleOnline/zf2-essentials/)
+[![Code Coverage](https://scrutinizer-ci.com/g/ControleOnline/zf2-essentials/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/ControleOnline/zf2-essentials/)
+[![Build Status](https://scrutinizer-ci.com/g/ControleOnline/zf2-essentials/badges/build.png?b=master)](https://scrutinizer-ci.com/g/ControleOnline/zf2-essentials/)
+
 # ZF2Essentials #
 
 This software aims to be engaged in any system and without any additional line programming is required, the final code is automatically optimized.
