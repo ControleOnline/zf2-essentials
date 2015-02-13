@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/ControleOnline/zf2-essentials.svg)](https://travis-ci.org/ControleOnline/zf2-essentials)
 # ZF2Essentials #
 
 This software aims to be engaged in any system and without any additional line programming is required, the final code is automatically optimized.
