@@ -3,9 +3,8 @@
 namespace ZF2Essentials\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
 use Doctrine\ORM\EntityManager;
-
+use ZF2Essentials\DiscoveryModel;
 
 class ScaffoldingController extends AbstractActionController {
 
@@ -27,19 +26,13 @@ class ScaffoldingController extends AbstractActionController {
         if (null === $this->em) {
             $this->em = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
         }
-
         return $this->em;
     }
 
     public function indexAction() {
-        
-        echo '<pre>';
-        print_r($this->params('scaffolding'));
-        echo '</pre>';
-        die();
-        
-        return new ViewModel(array(
-            'albums' => $this->getEntityManager()->getRepository('Entity\User')->findAll()
-        ));
+
+        $DiscoveryModel = new DiscoveryModel($this->getEntityManager());
+        return $DiscoveryModel->discovery($this->params('scaffolding'));        
     }
+
 }

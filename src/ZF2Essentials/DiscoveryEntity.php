@@ -4,6 +4,9 @@ namespace ZF2Essentials;
 
 class DiscoveryEntity {
 
+    /**
+     * @var Doctrine\ORM\EntityManager
+     */
     private $em;
     private $entityFolder;
     private $namespace;
