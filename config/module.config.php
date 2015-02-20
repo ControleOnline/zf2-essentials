@@ -1,6 +1,11 @@
 <?php
 
 return array(
+    'controllers' => array(
+        'invokables' => array(
+            'ZF2Essentials\Controller\Scaffolding' => 'ZF2Essentials\Controller\ScaffoldingController',
+        ),
+    ),
     'router' => array(
         'routes' => array(
             'default' => array(
@@ -13,8 +18,8 @@ return array(
                         'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
                     ),
                     'defaults' => array(
-                        'module' => 'Default',
-                        'controller' => 'Index',
+                        'module' => 'ZF2Essentials',
+                        'controller' => 'Scaffolding',
                         'action' => 'index',
                     ),
                 ),
@@ -24,14 +29,14 @@ return array(
     // Doctrine configuration
     'doctrine' => array(
         'driver' => array(
-            'Entities' => array(
+            'Entity' => array(
                 'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
                 'cache' => 'array',
                 'paths' => array(getcwd() . DIRECTORY_SEPARATOR . 'entity')
             ),
             'orm_default' => array(
                 'drivers' => array(
-                    'Entities' => 'Entities'
+                    'Entity' => 'Entity'
                 ),
             ),
         ),

@@ -33,12 +33,13 @@ class DiscoveryRoute {
 
     protected function discoveryRoute($alias, $options) {
         $routes = array_filter(explode('/', $alias));
-        if (!empty($routes)) {
 
+        if (!empty($routes)) {
             $return['module'] = $this->camelCase((isset($routes[0]) ? $routes[0] : $options['module']));
             $return['action'] = lcfirst($this->camelCase((isset($routes[2]) ? $routes[2] : $options['action'])));
-            $return['controller'] = $return['module'] . '\Controller\\' . $this->camelCase((isset($routes[1]) ? $routes[1] : $options['controller']));
-
+            $controller = $this->camelCase((isset($routes[1]) ? $routes[1] : $options['controller']));
+            $action = $return['action'];
+            $return['controller'] = $return['module'] . '\Controller\\' . $controller;
             if (!class_exists($return['controller'] . 'Controller')) {
                 $return = $options;
                 $return['controller'] = $options['module'] . '\Controller\\' . $options['controller'];
@@ -52,6 +53,11 @@ class DiscoveryRoute {
         } else {
             $return['controller'] = $options['module'] . '\Controller\\' . $options['controller'];
         }
+
+        $return['scaffolding']['module'] = $return['module'];
+        $return['scaffolding']['controller'] = $controller;
+        $return['scaffolding']['action'] = $action;
+
         return array_merge($options, $return);
     }
 

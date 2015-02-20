@@ -4,7 +4,6 @@ namespace ZF2Essentials;
 
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
-use Zend\View\Model\JsonModel;
 use Zend\Http\Response;
 use Zend\Json\Json;
 

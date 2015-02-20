@@ -12,7 +12,7 @@ class DiscoveryEntity {
     public function __construct($em, $dbConfig) {
         $this->em = $em;
         $this->entityFolder = getcwd() . DIRECTORY_SEPARATOR . 'entity';
-        $this->namespace = 'Entities\\';
+        $this->namespace = 'Entity\\';
         $this->dbConfig = $dbConfig;
     }
 
@@ -61,21 +61,25 @@ class DiscoveryEntity {
             $cmf = new \Doctrine\ORM\Tools\DisconnectedClassMetadataFactory($this->em);
             $cmf->setEntityManager($this->em);
             $metadata = $cmf->getAllMetadata();
-            $generator = new \Doctrine\ORM\Tools\EntityGenerator();
-            $generator->setUpdateEntityIfExists(true);
-            $generator->setGenerateStubMethods(true);
-            $generator->setGenerateAnnotations(true);
-            $generator->generate($metadata, $this->entityFolder);
+            $this->EntityGenerator($metadata);
         }
 
         $autoLoader = new \Zend\Loader\StandardAutoloader(array(
             'namespaces' => array(
-                'Entities' => $this->entityFolder . DIRECTORY_SEPARATOR . $this->namespace,
+                'Entity' => $this->entityFolder . DIRECTORY_SEPARATOR . $this->namespace,
             ),
             'fallback_autoloader' => true,
         ));
 
         $autoLoader->register();
+    }
+
+    private function EntityGenerator($metadata) {
+        $generator = new \Doctrine\ORM\Tools\EntityGenerator();
+        $generator->setUpdateEntityIfExists(true);
+        $generator->setGenerateStubMethods(true);
+        $generator->setGenerateAnnotations(true);
+        $generator->generate($metadata, $this->entityFolder);
     }
 
 }
