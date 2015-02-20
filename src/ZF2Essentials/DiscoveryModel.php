@@ -3,7 +3,7 @@
 namespace ZF2Essentials;
 
 use Zend\View\Model\ViewModel;
-use Doctrine\ORM\EntityManager;
+
 
 class DiscoveryModel {
 
@@ -25,7 +25,7 @@ class DiscoveryModel {
         return $this->em;
     }
 
-    public function setEntityManager(EntityManager $em) {
+    public function setEntityManager(\Doctrine\ORM\EntityManager $em) {
         $this->em = $em;
     }
 
@@ -40,8 +40,7 @@ class DiscoveryModel {
 
           return new ViewModel(array(
           'users' => $user
-          ));
-         * 
+          ));          
          */
     }
 
