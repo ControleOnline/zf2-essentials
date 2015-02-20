@@ -8,7 +8,7 @@ use Zend\View\Model\ViewModel;
 class DiscoveryModel {
 
     /**
-     * @var Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManager
      */
     private $em;
 
@@ -19,7 +19,7 @@ class DiscoveryModel {
     /**
      * Return a EntityManager
      *
-     * @return Doctrine\ORM\EntityManager
+     * @return \Doctrine\ORM\EntityManager
      */
     public function getEntityManager() {
         return $this->em;
