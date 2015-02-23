@@ -31,7 +31,7 @@ class ScaffoldingController extends AbstractActionController {
 
     public function indexAction() {
         $method = strtoupper($this->params('method') ? : $_SERVER['REQUEST_METHOD']);
-        $DiscoveryModel = new DiscoveryModel($this->getEntityManager(), $method);
+        $DiscoveryModel = new DiscoveryModel($this->getEntityManager(), $method, $this->getRequest());
         return $DiscoveryModel->discovery($this->params('scaffolding'));
     }
 

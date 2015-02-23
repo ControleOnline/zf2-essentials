@@ -2,7 +2,7 @@
 
 namespace ZF2Essentials;
 
-use Zend\View\Model\ViewModel;
+use \Zend\View\Model\ViewModel;
 
 class DiscoveryModel {
 
@@ -10,11 +10,13 @@ class DiscoveryModel {
      * @var \Doctrine\ORM\EntityManager
      */
     private $em;
+    private $params;
     private $method;
 
-    public function __construct($em, $method) {
+    public function __construct($em, $method, $params) {
         $this->setEntityManager($em);
         $this->setMethod($method);
+        $this->setParams($this->prepareParams($params));
     }
 
     /**
@@ -24,6 +26,14 @@ class DiscoveryModel {
      */
     public function getEntityManager() {
         return $this->em;
+    }
+
+    public function getParams() {
+        return $this->params;
+    }
+
+    public function setParams(array $params) {
+        $this->params = $params;
     }
 
     public function getMethod() {
@@ -38,34 +48,36 @@ class DiscoveryModel {
         $this->em = $em;
     }
 
+    public function prepareParams(\Zend\Http\PhpEnvironment\Request $params) {
+        return array_merge(
+                $params->getQuery()->toArray(), $params->getPost()->toArray()
+        );
+    }
+
     public function discovery($route) {
+
+        $default_model = new Model\DefaultModel($this->getEntityManager());
+        $default_model->setEntity('Entity\\' . $route['controller']);
+
         switch ($this->getMethod()) {
             case 'POST':
+                return new ViewModel($default_model->insert($this->params));
                 break;
             case 'PUT':
+                return new ViewModel($default_model->edit($this->params));
                 break;
             case 'DELETE':
+                return new ViewModel($default_model->delete($this->params['id']));
                 break;
             case 'GET':
             default:
-                echo '<pre>';
-                print_r($route);
-                print_r($_SERVER['REQUEST_METHOD']);
-                echo '</pre>';
+                return array(
+                    'data' => new ViewModel(
+                            $default_model->get(isset($this->params['id']) ? $this->params['id'] : null)
+                    )
+                );
                 break;
         }
-
-
-        /*
-          $user = $this->getEntityManager()->getRepository('Entity\User')->find(1);
-          print_r($user);
-          print_r($this->getEntityManager()->getRepository('Entity\Adress')->find($user));
-          echo '</pre>';
-
-          return new ViewModel(array(
-          'users' => $user
-          ));
-         */
     }
 
 }
