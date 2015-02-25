@@ -59,15 +59,15 @@ class DefaultModel {
         // return $user->getId();
     }
 
-    public function get($id = null) {
+    public function get($id = null, $limit = 100, $offset = 0) {
         if ($id) {
             return $this->toArray($this->entity->find($id));
         } else {
             return $this->entity->createQueryBuilder('e')
                             ->select('e')
                             ->getQuery()
-                            ->setFirstResult(0)
-                            ->setMaxResults(1)
+                            ->setFirstResult($offset)
+                            ->setMaxResults($limit)
                             ->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
         }
     }
