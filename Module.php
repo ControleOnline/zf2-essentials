@@ -19,6 +19,7 @@ class Module {
     }
 
     public function onBootstrap(MvcEvent $e) {
+
         $this->sm = $e->getApplication()->getServiceManager();
         $this->em = $this->sm->get('Doctrine\ORM\EntityManager');
         $config = $this->sm->get('config');
@@ -51,12 +52,16 @@ class Module {
 
     public function setResponseType(MvcEvent $e) {
         if ($this->config['jsonStrategy']) {
+
             $request = $e->getRequest();
             $headers = $request->getHeaders();
-            if ($headers->has('accept')) {
+            $uri = $e->getRequest()->getUri()->getPath();
+            $compare = '.json';
+            $is_json = substr_compare($uri, $compare, strlen($uri) - strlen($compare), strlen($compare)) === 0;
+            if ($headers->has('accept') || $is_json) {
                 $accept = $headers->get('accept');
                 $match = $accept->match('application/json');
-                if ($match && $match->getTypeString() != '*/*') {
+                if ($is_json || ($match && $match->getTypeString() != '*/*')) {
                     $e->getApplication()->getEventManager()->attach('render', array($this, 'registerJsonStrategy'), 100);
                     $e->getApplication()->getEventManager()->attach(MvcEvent::EVENT_FINISH, array($this, 'finishJsonStrategy'));
                 }

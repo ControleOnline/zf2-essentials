@@ -2,8 +2,6 @@
 
 namespace ZF2Essentials;
 
-use \Zend\View\Model\ViewModel;
-
 class DiscoveryModel {
 
     /**
@@ -61,21 +59,17 @@ class DiscoveryModel {
 
         switch ($this->getMethod()) {
             case 'POST':
-                return new ViewModel($default_model->insert($this->params));
+                return $default_model->insert($this->params);
                 break;
             case 'PUT':
-                return new ViewModel($default_model->edit($this->params));
+                return $default_model->edit($this->params);
                 break;
             case 'DELETE':
-                return new ViewModel($default_model->delete($this->params['id']));
+                return $default_model->delete($this->params['id']);
                 break;
             case 'GET':
             default:
-                return array(
-                    'data' => new ViewModel(
-                            $default_model->get(isset($this->params['id']) ? $this->params['id'] : null)
-                    )
-                );
+                return $default_model->get(isset($this->params['id']) ? $this->params['id'] : null);
                 break;
         }
     }

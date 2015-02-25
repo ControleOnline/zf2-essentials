@@ -5,6 +5,7 @@ namespace ZF2Essentials\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use Doctrine\ORM\EntityManager;
 use ZF2Essentials\DiscoveryModel;
+use \Zend\View\Model\ViewModel;
 
 class ScaffoldingController extends AbstractActionController {
 
@@ -32,7 +33,20 @@ class ScaffoldingController extends AbstractActionController {
     public function indexAction() {
         $method = strtoupper($this->params('method') ? : $_SERVER['REQUEST_METHOD']);
         $DiscoveryModel = new DiscoveryModel($this->getEntityManager(), $method, $this->getRequest());
-        return $DiscoveryModel->discovery($this->params('scaffolding'));
+        $data = $DiscoveryModel->discovery($this->params('scaffolding'));
+        if ($data) {
+            $return = array(
+                'data' => $data,
+                'count' => count($data),
+                'success' => true
+            );
+        } else {
+            $return = array(
+                'error' => 'sss',
+                'success' => false
+            );
+        }        
+        return new ViewModel($return);
     }
 
 }
