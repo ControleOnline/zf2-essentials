@@ -31,40 +31,19 @@ class DefaultController extends AbstractActionController {
     }
 
     public function indexAction() {
-        $method = strtoupper($this->params()->fromQuery('method') ? : $_SERVER['REQUEST_METHOD']);
-        $DiscoveryModel = new DiscoveryModel($this->getEntityManager(), $method, $this->getRequest());
-        $page = $this->params()->fromQuery('page') ? : 1;
-
         try {
+            $method = strtoupper($this->params()->fromQuery('method') ? : $_SERVER['REQUEST_METHOD']);
+            $DiscoveryModel = new DiscoveryModel($this->getEntityManager(), $method, $this->getRequest());
+            $page = $this->params()->fromQuery('page') ? : 1;
             $data = $DiscoveryModel->discovery($this->params('scaffolding'));
             $total = $DiscoveryModel->getTotalResults();
-            if ($data && is_array($data)) {
-                $return = array(
-                    'data' => $data,
-                    'count' => count($data),
-                    'total' => (int) $total,
-                    'page' => (int) $page,
-                    'success' => true
-                );
-            } elseif ($data) {
-                $return = array(
-                    'data' => array(
-                        'id' => $data
-                    ),
-                    'count' => count($data),
-                    'total' => (int) $total,
-                    'page' => (int) $page,
-                    'success' => true
-                );
-            } else {
-                $return = array(
-                    'data' => $data,
-                    'count' => count($data),
-                    'total' => (int) $total,
-                    'page' => (int) $page,
-                    'success' => true
-                );
-            }
+            $return = array(
+                'data' => $data,
+                'count' => count($data),
+                'total' => (int) $total,
+                'page' => (int) $page,
+                'success' => true
+            );
             return new ViewModel($return);
         } catch (\Exception $e) {
             $return = array(
