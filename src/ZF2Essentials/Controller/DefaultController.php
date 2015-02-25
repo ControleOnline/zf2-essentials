@@ -31,16 +31,24 @@ class DefaultController extends AbstractActionController {
     }
 
     public function indexAction() {
-        $method = strtoupper($this->params('method') ? : $_SERVER['REQUEST_METHOD']);
+        $method = strtoupper($this->params()->fromQuery('method') ? : $_SERVER['REQUEST_METHOD']);
         $DiscoveryModel = new DiscoveryModel($this->getEntityManager(), $method, $this->getRequest());
         $data = $DiscoveryModel->discovery($this->params('scaffolding'));
-
-        if ($data) {
+        $page = $this->params()->fromQuery('page') ? : 1;
+        if ($data && is_array($data)) {
+            $total = $DiscoveryModel->getTotalResults();
             $return = array(
                 'data' => $data,
                 'count' => count($data),
-                'total' => 2,
-                'page' => 1,
+                'total' => (int) $total,
+                'page' => (int) $page,
+                'success' => true
+            );
+        } elseif ($data) {
+            $return = array(
+                'data' => array(
+                    'id' => $data
+                ),
                 'success' => true
             );
         } else {

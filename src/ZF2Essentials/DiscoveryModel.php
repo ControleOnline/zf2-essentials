@@ -10,6 +10,7 @@ class DiscoveryModel {
     private $em;
     private $params;
     private $method;
+    private $rows;
 
     public function __construct($em, $method, $params) {
         $this->setEntityManager($em);
@@ -52,6 +53,10 @@ class DiscoveryModel {
         );
     }
 
+    public function getTotalResults() {
+        return $this->rows;
+    }
+
     public function discovery($route) {
 
         $default_model = new Model\DefaultModel($this->getEntityManager());
@@ -72,7 +77,9 @@ class DiscoveryModel {
                 $id = isset($this->params['id']) ? $this->params['id'] : null;
                 $page = isset($this->params['page']) ? $this->params['page'] : 1;
                 $limit = isset($this->params['limit']) ? $this->params['limit'] : 100;
-                return $default_model->get($id, $page, $limit);
+                $data = $default_model->get($id, $page, $limit);
+                $this->rows = $default_model->getTotalResults();
+                return $data;
                 break;
         }
     }

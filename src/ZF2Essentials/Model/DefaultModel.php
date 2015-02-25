@@ -14,6 +14,7 @@ class DefaultModel {
      */
     private $entity;
     private $entity_name;
+    private $rows;
 
     public function __construct($em) {
         $this->em = $em;
@@ -59,16 +60,25 @@ class DefaultModel {
         // return $user->getId();
     }
 
+    public function getTotalResults() {
+        return $this->rows;
+    }
+
     public function get($id = null, $page = 1, $limit = 100) {
         if ($id) {
             return $this->toArray($this->entity->find($id));
         } else {
-            return $this->entity->createQueryBuilder('e')
-                            ->select('e')
-                            ->getQuery()
-                            ->setFirstResult($limit * ($page - 1))
-                            ->setMaxResults($limit)
-                            ->getArrayResult();
+
+            $query = $this->entity->createQueryBuilder('e')
+                    ->select('e')
+                    ->getQuery()
+                    ->setFirstResult($limit * ($page - 1))
+                    ->setMaxResults($limit);
+
+            $paginator = new \Doctrine\ORM\Tools\Pagination\Paginator($query);
+            $this->rows = count($paginator);
+
+            return $query->getArrayResult();
         }
     }
 
