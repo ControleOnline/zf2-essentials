@@ -66,15 +66,14 @@ class DefaultController extends AbstractActionController {
                 );
             }
             return new ViewModel($return);
-        } catch (Doctrine_Connection_Exception $e) {
+        } catch (\Exception $e) {
             $return = array(
                 'error' => array(
-                    'code' => $e->getPortableCode(),
-                    'message' => $e->getPortableMessage(),
+                    'code' => $e->getCode(),
+                    'message' => $e->getMessage(),
                 ),
                 'success' => false
             );
-
             return new ViewModel($return);
         }
     }
