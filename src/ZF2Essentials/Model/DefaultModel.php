@@ -29,22 +29,46 @@ class DefaultModel {
     }
 
     public function delete($id) {
+        /*
+          $em->remove($user);
+          $em->flush();
+         */
+
         return $this->delete($id);
     }
 
     public function edit(array $params) {
-        
+        /*
+          $user = new User;
+          $user->setName('Mr.Right');
+          $em->persist($user);
+          $em->flush();
+         */
+
+        // return $user->getId();
     }
 
     public function insert(array $params) {
-        
+        /*
+          $user = new User;
+          $user->setName('Mr.Right');
+          $em->persist($user);
+          $em->flush();
+         */
+
+        // return $user->getId();
     }
 
     public function get($id = null) {
         if ($id) {
             return $this->toArray($this->entity->find($id));
         } else {
-            return $this->entity->findAll();
+            return $this->entity->createQueryBuilder('e')
+                            ->select('e')
+                            ->getQuery()
+                            ->setFirstResult(0)
+                            ->setMaxResults(1)
+                            ->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
         }
     }
 

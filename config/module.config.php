@@ -3,7 +3,7 @@
 return array(
     'controllers' => array(
         'invokables' => array(
-            'ZF2Essentials\Controller\Scaffolding' => 'ZF2Essentials\Controller\ScaffoldingController',
+            'ZF2Essentials\Controller\Default' => 'ZF2Essentials\Controller\DefaultController',
         ),
     ),
     'router' => array(
@@ -19,7 +19,7 @@ return array(
                     ),
                     'defaults' => array(
                         'module' => 'ZF2Essentials',
-                        'controller' => 'Scaffolding',
+                        'controller' => 'Default',
                         'action' => 'index',
                     ),
                 ),

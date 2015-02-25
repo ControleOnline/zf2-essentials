@@ -7,7 +7,7 @@ use Doctrine\ORM\EntityManager;
 use ZF2Essentials\DiscoveryModel;
 use \Zend\View\Model\ViewModel;
 
-class ScaffoldingController extends AbstractActionController {
+class DefaultController extends AbstractActionController {
 
     /**
      * @var Doctrine\ORM\EntityManager
@@ -34,10 +34,13 @@ class ScaffoldingController extends AbstractActionController {
         $method = strtoupper($this->params('method') ? : $_SERVER['REQUEST_METHOD']);
         $DiscoveryModel = new DiscoveryModel($this->getEntityManager(), $method, $this->getRequest());
         $data = $DiscoveryModel->discovery($this->params('scaffolding'));
+
         if ($data) {
             $return = array(
                 'data' => $data,
                 'count' => count($data),
+                'total' => 2,
+                'page' => 1,
                 'success' => true
             );
         } else {
@@ -45,7 +48,7 @@ class ScaffoldingController extends AbstractActionController {
                 'error' => 'sss',
                 'success' => false
             );
-        }        
+        }
         return new ViewModel($return);
     }
 
