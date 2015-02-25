@@ -110,3 +110,8 @@ $.ajax({
         console.log(response);
     }});
 ```
+
+Or simply add the .json suffix at the end of the URL:
+```
+http://localhost/<Module>/<Controller>/<Action>.json?<Parameters>
+```
