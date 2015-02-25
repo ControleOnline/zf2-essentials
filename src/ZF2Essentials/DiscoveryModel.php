@@ -69,8 +69,12 @@ class DiscoveryModel {
                 break;
             case 'GET':
             default:
-                return $default_model->get(isset($this->params['id']) ? $this->params['id'] : null);
+                $id = isset($this->params['id']) ? $this->params['id'] : null;
+                $page = isset($this->params['page']) ? $this->params['page'] : 1;
+                $limit = isset($this->params['limit']) ? $this->params['limit'] : 100;
+                return $default_model->get($id, $page, $limit);
                 break;
         }
     }
+
 }

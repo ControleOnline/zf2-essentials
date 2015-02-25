@@ -59,16 +59,16 @@ class DefaultModel {
         // return $user->getId();
     }
 
-    public function get($id = null, $limit = 100, $offset = 0) {
+    public function get($id = null, $page = 1, $limit = 100) {
         if ($id) {
             return $this->toArray($this->entity->find($id));
         } else {
             return $this->entity->createQueryBuilder('e')
                             ->select('e')
                             ->getQuery()
-                            ->setFirstResult($offset)
+                            ->setFirstResult($limit * ($page - 1))
                             ->setMaxResults($limit)
-                            ->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
+                            ->getArrayResult();
         }
     }
 
