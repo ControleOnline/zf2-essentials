@@ -33,31 +33,50 @@ class DefaultController extends AbstractActionController {
     public function indexAction() {
         $method = strtoupper($this->params()->fromQuery('method') ? : $_SERVER['REQUEST_METHOD']);
         $DiscoveryModel = new DiscoveryModel($this->getEntityManager(), $method, $this->getRequest());
-        $data = $DiscoveryModel->discovery($this->params('scaffolding'));
         $page = $this->params()->fromQuery('page') ? : 1;
-        if ($data && is_array($data)) {
+
+        try {
+            $data = $DiscoveryModel->discovery($this->params('scaffolding'));
             $total = $DiscoveryModel->getTotalResults();
+            if ($data && is_array($data)) {
+                $return = array(
+                    'data' => $data,
+                    'count' => count($data),
+                    'total' => (int) $total,
+                    'page' => (int) $page,
+                    'success' => true
+                );
+            } elseif ($data) {
+                $return = array(
+                    'data' => array(
+                        'id' => $data
+                    ),
+                    'count' => count($data),
+                    'total' => (int) $total,
+                    'page' => (int) $page,
+                    'success' => true
+                );
+            } else {
+                $return = array(
+                    'data' => $data,
+                    'count' => count($data),
+                    'total' => (int) $total,
+                    'page' => (int) $page,
+                    'success' => true
+                );
+            }
+            return new ViewModel($return);
+        } catch (Doctrine_Connection_Exception $e) {
             $return = array(
-                'data' => $data,
-                'count' => count($data),
-                'total' => (int) $total,
-                'page' => (int) $page,
-                'success' => true
-            );
-        } elseif ($data) {
-            $return = array(
-                'data' => array(
-                    'id' => $data
+                'error' => array(
+                    'code' => $e->getPortableCode(),
+                    'message' => $e->getPortableMessage(),
                 ),
-                'success' => true
-            );
-        } else {
-            $return = array(
-                'error' => 'sss',
                 'success' => false
             );
+
+            return new ViewModel($return);
         }
-        return new ViewModel($return);
     }
 
 }
