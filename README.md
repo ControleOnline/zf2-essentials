@@ -110,8 +110,18 @@ $.ajax({
         console.log(response);
     }});
 ```
-
 Or simply add the .json suffix at the end of the URL:
 ```
 http://localhost/<Module>/<Controller>/<Action>.json?<Parameters>
+```
+
+### REST ###
+To return directly your Entity, use the REST standard
+```
+http://localhost/<Entity>/id/<ID>.json?<Parameters> //Find By ID
+http://localhost/<Entity>.json?<Parameters> //Return all records
+```
+#### Pagination ####
+```
+http://localhost/<Entity>.json?page=2&limit=100 //Return second page limited by 100 records
 ```

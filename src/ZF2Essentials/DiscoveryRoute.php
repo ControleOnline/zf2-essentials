@@ -46,8 +46,8 @@ class DiscoveryRoute {
     protected function discoveryByController($routes) {
 
         $defaultRoute = $this->getDefaultRoute();
-        $module = $this->camelCase((isset($routes[0]) ? $routes[0] : $defaultRoute['module']));
-        $class_name = $this->camelCase((isset($routes[1]) ? $routes[1] : $defaultRoute['controller']));
+        $module = $this->camelCase((isset($routes[0]) ? str_replace('.json', '', $routes[0]) : $defaultRoute['module']));
+        $class_name = $this->camelCase((isset($routes[1]) ? str_replace('.json', '', $routes[1]) : $defaultRoute['controller']));
         $controller = $this->formarClass($class_name, 'Controller', $module);
 
         if (class_exists($controller)) {
@@ -62,7 +62,7 @@ class DiscoveryRoute {
 
     protected function discoveryByEntity($routes) {
         $defaultRoute = $this->getDefaultRoute();
-        $entity = $this->camelCase((isset($routes[0]) ? $routes[0] : null));
+        $entity = $this->camelCase((isset($routes[0]) ? str_replace('.json', '', $routes[0]) : null));
         $this->setModule($defaultRoute['module']);
         $this->setController($this->formarClass($defaultRoute['controller'], 'Controller', $defaultRoute['module']));
         $this->setAction($defaultRoute['action']);
