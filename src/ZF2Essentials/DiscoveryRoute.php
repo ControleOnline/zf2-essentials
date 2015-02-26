@@ -30,7 +30,7 @@ class DiscoveryRoute {
         $qtde = count($params);
         for ($i = 0; $i < $qtde; $i += 2) {
             $key = str_replace('.json', '', $params[$i]);
-            $value = isset($params[$i + 1]) ? $params[$i + 1] : null;
+            $value = isset($params[$i + 1]) ? str_replace('.json', '', $params[$i + 1]) : null;
             $request->getQuery()->set($key, $value);
         }
     }
