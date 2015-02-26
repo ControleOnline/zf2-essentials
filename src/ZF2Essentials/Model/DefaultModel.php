@@ -64,29 +64,17 @@ class DefaultModel {
         return $this->rows;
     }
 
+    public function getWithParent($id, $entity_parent) {
+        $qb = $this->entity->createQueryBuilder('e')->select('e');
+        return $qb->where('e.' . strtolower($entity_parent) . '=' . $id)->getQuery()->getArrayResult();
+    }
+
     public function get($id = null, $page = 1, $limit = 100) {
-        /*
-          $em->getRepository('Article')->
-          findBy(
-          array(
-          'style' => $style->getId(),
-          'color' => $color->getId()
-          )
-          );
-         */
-
+        $qb = $this->entity->createQueryBuilder('e')->select('e');
         if ($id) {
-            return $this->entity->createQueryBuilder('e')
-                            ->select('e')
-                            ->where('e.id=' . $id)
-                            ->getQuery()->getArrayResult();
+            return $qb->where('e.id=' . $id)->getQuery()->getArrayResult();
         } else {
-            $query = $this->entity->createQueryBuilder('e')
-                    ->select('e')
-                    ->getQuery()
-                    ->setFirstResult($limit * ($page - 1))
-                    ->setMaxResults($limit);
-
+            $query = $qb->getQuery()->setFirstResult($limit * ($page - 1))->setMaxResults($limit);
             $paginator = new \Doctrine\ORM\Tools\Pagination\Paginator($query);
             $this->rows = count($paginator);
             return $query->getArrayResult();

@@ -124,6 +124,7 @@ To return directly your Entity, use the REST standard
 ```
 http://localhost/<Entity>/id/<ID>.json?<Parameters> //Find By ID
 http://localhost/<Entity>.json?<Parameters> //Return all records
+http://localhost/<Entity>/id/<ID>/<Children>.json?<Parameters> //Find By Parent ID
 ```
 #### Pagination ####
 ```

@@ -35,8 +35,18 @@ class DefaultController extends AbstractActionController {
             $method = strtoupper($this->params()->fromQuery('method') ? : $_SERVER['REQUEST_METHOD']);
             $DiscoveryModel = new DiscoveryModel($this->getEntityManager(), $method, $this->getRequest());
             $page = $this->params()->fromQuery('page') ? : 1;
-            $data = $DiscoveryModel->discovery($this->params('entity'));
+            $entity_children = $this->params('entity_children');
             $id = $this->params()->fromQuery('id');
+
+            if ($entity_children && $id) {
+                $data = $DiscoveryModel->discovery($entity_children, $this->params('entity'));
+            } else {
+
+                $data = $DiscoveryModel->discovery($this->params('entity'));
+            }
+
+
+
             if ($id && $data) {
                 $return = array(
                     'data' => $data,

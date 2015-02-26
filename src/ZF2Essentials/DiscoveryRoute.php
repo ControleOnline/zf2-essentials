@@ -13,6 +13,7 @@ class DiscoveryRoute {
     protected $_vars;
     protected $_url;
     protected $_defaultRoute;
+    protected $_EntityChildren;
 
     public function __construct($defaultRoute) {
         $this->setDefaultRoute($defaultRoute);
@@ -37,9 +38,9 @@ class DiscoveryRoute {
 
     protected function formarClass($class, $type, $module = null) {
         if ($module) {
-            return '\\' . $module . '\\' . $type . '\\' . $class;
+            return '\\' . $this->camelCase($module) . '\\' . $this->camelCase($type) . '\\' . $this->camelCase($class);
         } else {
-            return '\\' . $type . '\\' . $class;
+            return '\\' . $this->camelCase($type) . '\\' . $this->camelCase($class);
         }
     }
 
@@ -93,6 +94,16 @@ class DiscoveryRoute {
         }
     }
 
+    protected function discoveryEntityChildren() {
+        $routes = $this->getUrl();
+        $count = count($routes);
+        if ($count % 2 != 0 && $count > 0) {
+            $this->setEntityChildren(str_replace('.json', '', $routes[$count - 1]));
+            unset($routes[$count - 1]);
+            $this->setUrl($routes);
+        }
+    }
+
     protected function discoveryRoute($default) {
         $routes = $this->getUrl();
         $this->discoveryByController($routes);
@@ -100,13 +111,15 @@ class DiscoveryRoute {
             $this->discoveryAction($routes);
         } else {
             $this->discoveryByEntity($routes);
+            $this->discoveryEntityChildren();
         }
 
         $return = array(
-            'module' => $this->getModule(),
+            'module' => $this->camelCase($this->getModule()),
             'controller' => $this->getController(),
-            'action' => $this->getAction(),
-            'entity' => $this->getEntity()
+            'action' => $this->camelCase($this->getAction()),
+            'entity' => $this->camelCase($this->getEntity()),
+            'entity_children' => $this->camelCase($this->getEntityChildren())
         );
         return array_merge($default, $return);
     }
@@ -180,6 +193,15 @@ class DiscoveryRoute {
 
     public function setDefaultRoute($defaultRoute) {
         $this->_defaultRoute = $defaultRoute;
+        return $this;
+    }
+
+    public function getEntityChildren() {
+        return $this->_EntityChildren;
+    }
+
+    public function setEntityChildren($EntityChildren) {
+        $this->_EntityChildren = $EntityChildren;
         return $this;
     }
 

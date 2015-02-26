@@ -57,7 +57,7 @@ class DiscoveryModel {
         return $this->rows;
     }
 
-    public function discovery($entity) {
+    public function discovery($entity, $entity_parent = null) {
 
         $default_model = new Model\DefaultModel($this->getEntityManager());
         $default_model->setEntity('Entity\\' . $entity);
@@ -77,8 +77,13 @@ class DiscoveryModel {
                 $id = isset($this->params['id']) ? $this->params['id'] : null;
                 $page = isset($this->params['page']) ? $this->params['page'] : 1;
                 $limit = isset($this->params['limit']) ? $this->params['limit'] : 100;
-                $data = $default_model->get($id, $page, $limit);
-                $this->rows = $default_model->getTotalResults();
+
+                if ($entity_parent) {
+                    $data = $default_model->getWithParent($id,$entity_parent);
+                } else {
+                    $data = $default_model->get($id, $page, $limit);
+                    $this->rows = $default_model->getTotalResults();
+                }
                 return $data;
                 break;
         }
