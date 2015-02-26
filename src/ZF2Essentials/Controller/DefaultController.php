@@ -35,15 +35,25 @@ class DefaultController extends AbstractActionController {
             $method = strtoupper($this->params()->fromQuery('method') ? : $_SERVER['REQUEST_METHOD']);
             $DiscoveryModel = new DiscoveryModel($this->getEntityManager(), $method, $this->getRequest());
             $page = $this->params()->fromQuery('page') ? : 1;
-            $data = $DiscoveryModel->discovery($this->params('scaffolding'));
-            $total = $DiscoveryModel->getTotalResults();
-            $return = array(
-                'data' => $data,
-                'count' => count($data),
-                'total' => (int) $total,
-                'page' => (int) $page,
-                'success' => true
-            );
+            $data = $DiscoveryModel->discovery($this->params('entity'));
+            $id = $this->params()->fromQuery('id');
+
+            if ($id && $data) {
+                $return = array(
+                    'data' => $data,
+                    'count' => 1,
+                    'success' => true
+                );
+            } else {
+                $total = $DiscoveryModel->getTotalResults();
+                $return = array(
+                    'data' => $data,
+                    'count' => count($data),
+                    'total' => (int) $total,
+                    'page' => (int) $page,
+                    'success' => true
+                );
+            }
             return new ViewModel($return);
         } catch (\Exception $e) {
             $return = array(

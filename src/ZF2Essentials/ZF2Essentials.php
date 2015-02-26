@@ -13,7 +13,7 @@ class ZF2Essentials implements RouteInterface {
 
     protected $defaults = array();
 
-    public function __construct(array $defaults = array()) {        
+    public function __construct(array $defaults = array()) {
         $this->defaults = $defaults;
     }
 
@@ -26,7 +26,7 @@ class ZF2Essentials implements RouteInterface {
 
         if (!isset($options['defaults'])) {
             $options['defaults'] = array();
-        }        
+        }
 
         return new static($options['defaults']);
     }
@@ -40,9 +40,10 @@ class ZF2Essentials implements RouteInterface {
         $fullPath = $uri->getPath();
         $path = substr($fullPath, $pathOffset);
         $alias = trim($path, '/');
-        $discovery = new DiscoveryRoute();
-        $options = $discovery->getRoute($alias, $this->defaults);
-        $discovery->setGetParams($alias, $request, $options);
+        $discovery = new DiscoveryRoute($this->defaults);
+        $discovery->setUrl($alias);
+        $options = $discovery->getRoute();
+        $discovery->setGetParams($request);
         return new RouteMatch($options);
     }
 

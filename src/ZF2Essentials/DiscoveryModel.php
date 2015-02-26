@@ -57,10 +57,10 @@ class DiscoveryModel {
         return $this->rows;
     }
 
-    public function discovery($route) {
+    public function discovery($entity) {
 
         $default_model = new Model\DefaultModel($this->getEntityManager());
-        $default_model->setEntity('Entity\\' . $route['controller']);
+        $default_model->setEntity('Entity\\' . $entity);
 
         switch ($this->getMethod()) {
             case 'POST':
