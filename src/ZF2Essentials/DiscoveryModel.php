@@ -65,13 +65,10 @@ class DiscoveryModel {
         switch ($this->getMethod()) {
             case 'POST':
                 return $default_model->insert($this->params);
-                break;
             case 'PUT':
                 return $default_model->edit($this->params);
-                break;
             case 'DELETE':
                 return $default_model->delete($this->params['id']);
-                break;
             case 'GET':
             default:
                 $id = isset($this->params['id']) ? $this->params['id'] : null;
@@ -79,13 +76,12 @@ class DiscoveryModel {
                 $limit = isset($this->params['limit']) ? $this->params['limit'] : 100;
 
                 if ($entity_parent) {
-                    $data = $default_model->getWithParent($id,$entity_parent);
+                    $data = $default_model->getWithParent($id, $entity_parent);
                 } else {
                     $data = $default_model->get($id, $page, $limit);
                     $this->rows = $default_model->getTotalResults();
                 }
                 return $data;
-                break;
         }
     }
 
