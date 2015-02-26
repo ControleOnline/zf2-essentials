@@ -37,7 +37,6 @@ class DefaultController extends AbstractActionController {
             $page = $this->params()->fromQuery('page') ? : 1;
             $data = $DiscoveryModel->discovery($this->params('entity'));
             $id = $this->params()->fromQuery('id');
-
             if ($id && $data) {
                 $return = array(
                     'data' => $data,

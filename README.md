@@ -51,7 +51,11 @@ return array(
                     'user' => 'user',
                     'password' => 'pass',
                     'dbname' => 'db',
-                    'driver' => 'pdo_mysql'
+                    'driver' => 'pdo_mysql',
+                    'charset' => 'utf8',//Very important
+                    'driverOptions' => array(
+                            1002=>'SET NAMES utf8' //Very important
+                    )
                 )
             )
         )

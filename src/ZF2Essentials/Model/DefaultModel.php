@@ -65,6 +65,16 @@ class DefaultModel {
     }
 
     public function get($id = null, $page = 1, $limit = 100) {
+        /*
+          $em->getRepository('Article')->
+          findBy(
+          array(
+          'style' => $style->getId(),
+          'color' => $color->getId()
+          )
+          );
+         */
+
         if ($id) {
             return $this->entity->createQueryBuilder('e')
                             ->select('e')
