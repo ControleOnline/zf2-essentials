@@ -66,9 +66,11 @@ class DefaultModel {
 
     public function get($id = null, $page = 1, $limit = 100) {
         if ($id) {
-            return $this->toArray($this->entity->find($id));
+            return $this->entity->createQueryBuilder('e')
+                            ->select('e')
+                            ->where('e.id=' . $id)
+                            ->getQuery()->getArrayResult();
         } else {
-
             $query = $this->entity->createQueryBuilder('e')
                     ->select('e')
                     ->getQuery()
@@ -77,7 +79,6 @@ class DefaultModel {
 
             $paginator = new \Doctrine\ORM\Tools\Pagination\Paginator($query);
             $this->rows = count($paginator);
-
             return $query->getArrayResult();
         }
     }
