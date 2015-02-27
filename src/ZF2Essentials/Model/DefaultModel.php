@@ -64,9 +64,22 @@ class DefaultModel {
         return $this->rows;
     }
 
-    public function getWithParent($id, $entity_parent) {
+    public function getFields() {
+        //print_r($this->em->getClassMetadata($this->entity_name)->getFieldNames());
+        //print_r($this->em->getClassMetadata($this->entity_name)->getAssociationNames());
+        //print_r($this->em->getClassMetadata($this->entity_name)->getAssociationMappings());
+    }
+
+    public function getWithParent($id, $entity_parent, $page = 1, $limit = 100) {
+        $table = $this->em->getClassMetadata($this->entity_name)->getTableName();
+        $qbp = $this->em->getRepository('Entity\\' . lcfirst($entity_parent))->createQueryBuilder('e')->select('e');
         $qb = $this->entity->createQueryBuilder('e')->select('e');
-        return $qb->where('e.' . strtolower($entity_parent) . '=' . $id)->getQuery()->getArrayResult();
+        $data[strtolower($entity_parent)] = $qbp->where('e.id=' . $id)->getQuery()->getArrayResult()[0];
+        $data[strtolower($entity_parent)][strtolower($table)] = $qb->where('e.' . strtolower($entity_parent) . '=' . $id)->getQuery()->getArrayResult();
+        $query = $qb->getQuery()->setFirstResult($limit * ($page - 1))->setMaxResults($limit);
+        $paginator = new \Doctrine\ORM\Tools\Pagination\Paginator($query);
+        $this->rows = count($paginator);
+        return $data;
     }
 
     public function get($id = null, $page = 1, $limit = 100) {

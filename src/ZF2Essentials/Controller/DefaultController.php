@@ -37,20 +37,23 @@ class DefaultController extends AbstractActionController {
             $page = $this->params()->fromQuery('page') ? : 1;
             $entity_children = $this->params('entity_children');
             $id = $this->params()->fromQuery('id');
-
             if ($entity_children && $id) {
                 $data = $DiscoveryModel->discovery($entity_children, $this->params('entity'));
             } else {
-
                 $data = $DiscoveryModel->discovery($this->params('entity'));
             }
-
-
-
-            if ($id && $data) {
+            if ($entity_children && $id && $data) {
+                $total = $DiscoveryModel->getTotalResults();
                 $return = array(
-                    'data' => $data,
-                    'count' => 1,
+                    'data' => $data,     
+                    'count' => count($data[strtolower($this->params('entity'))][strtolower($entity_children)]),
+                    'total' => (int) $total,
+                    'page' => (int) $page,
+                    'success' => true
+                );
+            } elseif ($id && $data) {
+                $return = array(
+                    'data' => $data,                    
                     'success' => true
                 );
             } else {
