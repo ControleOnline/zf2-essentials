@@ -2,6 +2,8 @@
 
 namespace ZF2Essentials\Model;
 
+use Doctrine\ORM\Tools\Pagination\Paginator;
+
 class DefaultModel {
 
     /**
@@ -74,10 +76,11 @@ class DefaultModel {
         $table = $this->em->getClassMetadata($this->entity_name)->getTableName();
         $qbp = $this->em->getRepository('Entity\\' . lcfirst($entity_parent))->createQueryBuilder('e')->select('e');
         $qb = $this->entity->createQueryBuilder('e')->select('e');
-        $data[strtolower($entity_parent)] = $qbp->where('e.id=' . $id)->getQuery()->getArrayResult()[0];
-        $data[strtolower($entity_parent)][strtolower($table)] = $qb->where('e.' . strtolower($entity_parent) . '=' . $id)->getQuery()->getArrayResult();
+        $parent = strtolower($entity_parent);
+        $data[$parent] = $qbp->where('e.id=' . $id)->getQuery()->getArrayResult()[0];
+        $data[$parent][strtolower($table)] = $qb->where('e.' . $parent . '=' . $id)->getQuery()->getArrayResult();
         $query = $qb->getQuery()->setFirstResult($limit * ($page - 1))->setMaxResults($limit);
-        $paginator = new \Doctrine\ORM\Tools\Pagination\Paginator($query);
+        $paginator = new Paginator($query);
         $this->rows = count($paginator);
         return $data;
     }
@@ -88,7 +91,7 @@ class DefaultModel {
             return $qb->where('e.id=' . $id)->getQuery()->getArrayResult();
         } else {
             $query = $qb->getQuery()->setFirstResult($limit * ($page - 1))->setMaxResults($limit);
-            $paginator = new \Doctrine\ORM\Tools\Pagination\Paginator($query);
+            $paginator = new Paginator($query);
             $this->rows = count($paginator);
             return $query->getArrayResult();
         }
