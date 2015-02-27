@@ -40,9 +40,7 @@ class DefaultController extends AbstractActionController {
             switch ($method) {
                 case 'DELETE':
                     $data = $DiscoveryModel->discovery($this->params('entity'));
-                    $return = array(
-                        'data' => $data
-                    );
+                    $return['success'] = $data ? true : false;                    
                     break;
                 case 'PUT':
                     $data = $DiscoveryModel->discovery($this->params('entity'));
@@ -90,7 +88,9 @@ class DefaultController extends AbstractActionController {
                     break;
             }
             $return['method'] = $method;
-            $return['success'] = true;
+            if (!isset($return['success'])) {
+                $return['success'] = true;
+            }
             return new ViewModel($return);
         } catch (\Exception $e) {
             $return = array(

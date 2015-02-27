@@ -52,7 +52,7 @@ class DiscoveryModel {
         $_params = array();
         switch ($method) {
             case 'PUT':
-            case 'DELETE':
+            case 'DELETE':                
                 parse_str(file_get_contents('php://input'), $_params);
                 array_merge($_params, $params->getPost()->toArray());
                 break;

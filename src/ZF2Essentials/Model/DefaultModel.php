@@ -32,12 +32,14 @@ class DefaultModel {
     }
 
     public function delete($id) {
-        /*
-          $em->remove($user);
-          $em->flush();
-         */
-
-        return $this->delete($id);
+        $row = $this->entity->find($id);
+        if ($row) {
+            $this->em->remove($row);
+            $this->em->flush();
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public function edit(array $params) {
