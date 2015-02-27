@@ -41,6 +41,10 @@ class DefaultModel {
     }
 
     public function edit(array $params) {
+        return $params;
+
+
+
         /*
           $user = new User;
           $user->setName('Mr.Right');
@@ -52,6 +56,7 @@ class DefaultModel {
     }
 
     public function insert(array $params) {
+        return $params;
         /*
           $user = new User;
           $user->setName('Mr.Right');

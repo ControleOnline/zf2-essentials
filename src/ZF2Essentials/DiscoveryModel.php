@@ -15,7 +15,7 @@ class DiscoveryModel {
     public function __construct($em, $method, $params) {
         $this->setEntityManager($em);
         $this->setMethod($method);
-        $this->setParams($this->prepareParams($params));
+        $this->setParams($this->prepareParams($params, $method));
     }
 
     /**
@@ -47,10 +47,23 @@ class DiscoveryModel {
         $this->em = $em;
     }
 
-    public function prepareParams(\Zend\Http\PhpEnvironment\Request $params) {
-        return array_merge(
-                $params->getQuery()->toArray(), $params->getPost()->toArray()
-        );
+    public function prepareParams(\Zend\Http\PhpEnvironment\Request $params, $method = 'GET') {
+
+        $_params = array();
+        switch ($method) {
+            case 'PUT':
+            case 'DELETE':
+                parse_str(file_get_contents('php://input'), $_params);
+                array_merge($_params, $params->getPost()->toArray());
+                break;
+            case 'POST':
+                $_params = $params->getPost()->toArray();
+                break;
+            default:
+                $_params = $params->getQuery()->toArray();
+                break;
+        }
+        return $_params;
     }
 
     public function getTotalResults() {
@@ -64,12 +77,14 @@ class DiscoveryModel {
 
         switch ($this->getMethod()) {
             case 'POST':
-                return $default_model->insert($this->params);
+                $data = $default_model->insert($this->params);
+                break;
             case 'PUT':
-                return $default_model->edit($this->params);
+                $data = $default_model->edit($this->params);
+                break;
             case 'DELETE':
-                return $default_model->delete($this->params['id']);
-            case 'GET':
+                $data = $default_model->delete($this->params['id']);
+                break;
             default:
                 $id = isset($this->params['id']) ? $this->params['id'] : null;
                 $page = isset($this->params['page']) ? $this->params['page'] : 1;
@@ -80,8 +95,9 @@ class DiscoveryModel {
                     $data = $default_model->get($id, $page, $limit);
                 }
                 $this->rows = $default_model->getTotalResults();
-                return $data;
+                break;
         }
+        return $data;
     }
 
 }

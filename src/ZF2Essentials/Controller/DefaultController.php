@@ -32,40 +32,65 @@ class DefaultController extends AbstractActionController {
 
     public function indexAction() {
         try {
-            $method = strtoupper($this->params()->fromQuery('method') ? : $_SERVER['REQUEST_METHOD']);
+            $allowed_methods = array('GET', 'POST', 'PUT', 'DELETE');
+            $method_request = strtoupper($this->params()->fromQuery('method') ? : $_SERVER['REQUEST_METHOD']);
+            $method = in_array($method_request, $allowed_methods) ? $method_request : 'GET';
             $DiscoveryModel = new DiscoveryModel($this->getEntityManager(), $method, $this->getRequest());
-            $page = $this->params()->fromQuery('page') ? : 1;
-            $entity_children = $this->params('entity_children');
-            $id = $this->params()->fromQuery('id');
-            if ($entity_children && $id) {
-                $data = $DiscoveryModel->discovery($entity_children, $this->params('entity'));
-            } else {
-                $data = $DiscoveryModel->discovery($this->params('entity'));
+
+            switch ($method) {
+                case 'DELETE':
+                    $data = $DiscoveryModel->discovery($this->params('entity'));
+                    $return = array(
+                        'data' => $data
+                    );
+                    break;
+                case 'PUT':
+                    $data = $DiscoveryModel->discovery($this->params('entity'));
+                    $return = array(
+                        'data' => $data
+                    );
+                    break;
+                case 'POST':
+                    $data = $DiscoveryModel->discovery($this->params('entity'));
+                    $return = array(
+                        'data' => $data
+                    );
+                    break;
+                case 'GET':
+                    $page = $this->params()->fromQuery('page') ? : 1;
+                    $entity_children = $this->params('entity_children');
+                    $id = $this->params()->fromQuery('id');
+                    if ($entity_children && $id) {
+                        $data = $DiscoveryModel->discovery($entity_children, $this->params('entity'));
+                    } else {
+                        $data = $DiscoveryModel->discovery($this->params('entity'));
+                    }
+
+                    if ($entity_children && $id && $data) {
+                        $total = $DiscoveryModel->getTotalResults();
+                        $return = array(
+                            'data' => $data,
+                            'count' => count($data[strtolower($this->params('entity'))][strtolower($entity_children)]),
+                            'total' => (int) $total,
+                            'page' => (int) $page
+                        );
+                    } elseif ($id && $data) {
+                        $return = array(
+                            'data' => $data
+                        );
+                    } else {
+                        $total = $DiscoveryModel->getTotalResults();
+                        $return = array(
+                            'data' => $data,
+                            'count' => count($data),
+                            'total' => (int) $total,
+                            'page' => (int) $page
+                        );
+                    }
+                    break;
             }
-            if ($entity_children && $id && $data) {
-                $total = $DiscoveryModel->getTotalResults();
-                $return = array(
-                    'data' => $data,     
-                    'count' => count($data[strtolower($this->params('entity'))][strtolower($entity_children)]),
-                    'total' => (int) $total,
-                    'page' => (int) $page,
-                    'success' => true
-                );
-            } elseif ($id && $data) {
-                $return = array(
-                    'data' => $data,                    
-                    'success' => true
-                );
-            } else {
-                $total = $DiscoveryModel->getTotalResults();
-                $return = array(
-                    'data' => $data,
-                    'count' => count($data),
-                    'total' => (int) $total,
-                    'page' => (int) $page,
-                    'success' => true
-                );
-            }
+            $return['method'] = $method;
+            $return['success'] = true;
             return new ViewModel($return);
         } catch (\Exception $e) {
             $return = array(
