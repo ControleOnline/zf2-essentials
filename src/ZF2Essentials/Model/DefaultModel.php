@@ -32,9 +32,9 @@ class DefaultModel {
     }
 
     public function delete($id) {
-        $row = $this->entity->find($id);
-        if ($row) {
-            $this->em->remove($row);
+        $entity = $this->entity->find($id);
+        if ($entity) {
+            $this->em->remove($entity);
             $this->em->flush();
             return true;
         } else {
@@ -43,45 +43,62 @@ class DefaultModel {
     }
 
     public function edit(array $params) {
-        return $params;
-
-
-
-        /*
-          $user = new User;
-          $user->setName('Mr.Right');
-          $em->persist($user);
-          $em->flush();
-         */
-
-        // return $user->getId();
+        $entity = $this->entity->find($params['id']);
+        if ($entity) {
+            $entity = $this->setData($entity, $params);
+            $this->em->persist($entity);
+            $this->em->flush();
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public function insert(array $params) {
-        return $params;
-        /*
-          $user = new User;
-          $user->setName('Mr.Right');
-          $em->persist($user);
-          $em->flush();
-         */
+        $class = $this->entity_name;
+        $entity = new $class;
+        $entity = $this->setData($entity, $params);
+        $this->em->persist($entity);
+        $this->em->flush();
+        return array('id' => $entity->getId());
+    }
 
-        // return $user->getId();
+    public function setData($entity, $params) {
+        $field_names = $this->getFieldNames()? : array();
+        foreach ($field_names as $field) {
+            if ($field != 'id' && isset($params[$field])) {
+                $f = 'set' . ucfirst($field);
+                $entity->$f($params[$field]);
+            }
+        }
+
+        $field_a_names = $this->getAssociationNames()? : array();
+        foreach ($field_a_names as $field_a) {
+            if (isset($params[$field_a . '_id'])) {
+                $f_a = ucfirst($field_a);
+                $object = $this->em->getRepository('Entity\\' . $f_a)->find($params[$field_a . '_id']);
+                $f_s = 'set' . $f_a;
+                $entity->$f_s($object);
+            }
+        }
+        return $entity;
     }
 
     public function getTotalResults() {
         return $this->rows;
     }
 
-    public function getFields() {
-        //print_r($this->em->getClassMetadata($this->entity_name)->getFieldNames());
-        //print_r($this->em->getClassMetadata($this->entity_name)->getAssociationNames());
-        //print_r($this->em->getClassMetadata($this->entity_name)->getAssociationMappings());
+    public function getAssociationNames() {
+        return $this->em->getClassMetadata($this->entity_name)->getAssociationNames();
+    }
+
+    public function getFieldNames() {
+        return $this->em->getClassMetadata($this->entity_name)->getFieldNames();
     }
 
     public function getWithParent($id, $entity_parent, $page = 1, $limit = 100) {
         $table = $this->em->getClassMetadata($this->entity_name)->getTableName();
-        $qbp = $this->em->getRepository('Entity\\' . lcfirst($entity_parent))->createQueryBuilder('e')->select('e');
+        $qbp = $this->em->getRepository('Entity\\' . ucfirst($entity_parent))->createQueryBuilder('e')->select('e');
         $qb = $this->entity->createQueryBuilder('e')->select('e');
         $parent = strtolower($entity_parent);
         $data[$parent] = $qbp->where('e.id=' . $id)->getQuery()->getArrayResult()[0];

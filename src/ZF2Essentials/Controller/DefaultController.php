@@ -39,14 +39,15 @@ class DefaultController extends AbstractActionController {
 
             switch ($method) {
                 case 'DELETE':
-                    $data = $DiscoveryModel->discovery($this->params('entity'));
-                    $return['success'] = $data ? true : false;                    
-                    break;
                 case 'PUT':
                     $data = $DiscoveryModel->discovery($this->params('entity'));
-                    $return = array(
-                        'data' => $data
-                    );
+                    if ($data) {
+                        $return['success'] = true;
+                    } else {
+                        $return['error']['code'] = 0;
+                        $return['error']['message'] = 'No register with this ID';
+                        $return['success'] = false;
+                    }
                     break;
                 case 'POST':
                     $data = $DiscoveryModel->discovery($this->params('entity'));
@@ -88,9 +89,7 @@ class DefaultController extends AbstractActionController {
                     break;
             }
             $return['method'] = $method;
-            if (!isset($return['success'])) {
-                $return['success'] = true;
-            }
+            $return['success'] = isset($return['success']) ? $return['success'] : true;
             return new ViewModel($return);
         } catch (\Exception $e) {
             $return = array(
