@@ -43,7 +43,8 @@ class DefaultModel {
     }
 
     public function edit(array $params) {
-        $entity = $this->entity->find($params['id']);
+        if (isset($params['id']))
+            $entity = $this->entity->find($params['id']);
         if ($entity) {
             $entity = $this->setData($entity, $params);
             $this->em->persist($entity);
