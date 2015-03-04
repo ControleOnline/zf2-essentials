@@ -50,7 +50,7 @@ class DiscoveryRoute {
         $module = $this->camelCase((isset($routes[0]) ? str_replace('.json', '', $routes[0]) : $defaultRoute['module']));
         $class_name = $this->camelCase((isset($routes[1]) ? str_replace('.json', '', $routes[1]) : $defaultRoute['controller']));
         $controller = $this->formarClass($class_name, 'Controller', $module) . 'Controller';
-        
+
         if (class_exists($controller)) {
             $this->setModule($module);
             $this->setController($controller);
@@ -70,8 +70,8 @@ class DiscoveryRoute {
 
         if ($entity) {
             $class_name = $this->formarClass($entity, 'Entity');
+            $this->setEntity($entity);
             if (class_exists($class_name)) {
-                $this->setEntity($entity);
                 $url = $this->getUrl();
                 unset($url[0]);
                 $this->setUrl($url);
