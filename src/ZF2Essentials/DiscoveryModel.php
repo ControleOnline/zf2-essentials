@@ -47,8 +47,8 @@ class DiscoveryModel {
         $this->em = $em;
     }
 
-    public function prepareParams(\Zend\Http\PhpEnvironment\Request $params, $method = 'GET') {
-
+    public function prepareParams(\Zend\Http\PhpEnvironment\Request $params, $method = 'GET') {                
+        
         $_params = array();
         switch ($method) {
             case 'PUT':
@@ -56,7 +56,7 @@ class DiscoveryModel {
                 parse_str(file_get_contents('php://input'), $_params);
                 array_merge($_params, $params->getPost()->toArray());
                 break;
-            case 'POST':
+            case 'POST':                
                 $_params = $params->getPost()->toArray();
                 break;
             default:

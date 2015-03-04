@@ -12,13 +12,14 @@ class Module {
     protected $sm;
     protected $config;
     protected $em;
+    protected $controller;
 
     public function getDefaultConfig($config) {
         $config['jsonStrategy'] = (isset($config['jsonStrategy']) ? $config['jsonStrategy'] : true);
         return $config;
     }
 
-    public function onBootstrap(MvcEvent $e) {
+    public function onBootstrap(\Zend\Mvc\MvcEvent $e) {
 
         $this->sm = $e->getApplication()->getServiceManager();
         $this->em = $this->sm->get('Doctrine\ORM\EntityManager');
@@ -27,18 +28,33 @@ class Module {
         $this->config = $this->getDefaultConfig(
                 (isset($config['zf2_essentials']) ? $config['zf2_essentials'] : array())
         );
-
-        $e->getApplication()->getServiceManager()->get('translator');
         $eventManager = $e->getApplication()->getEventManager();
         $moduleRouteListener = new ModuleRouteListener();
         $moduleRouteListener->attach($eventManager);
         $this->setResponseType($e);
-
         if (isset($config['doctrine']['connection']['orm_default']['params'])) {
             $dbConfig = $config['doctrine']['connection']['orm_default']['params'];
             $entity = new DiscoveryEntity($this->em, $dbConfig);
             $entity->checkEntities();
         }
+    }
+
+    public function init(\Zend\ModuleManager\ModuleManager $mm) {
+        $uri = array_values(array_filter(explode('/', $_SERVER['REQUEST_URI'])));
+        if (isset($uri[0]) && isset($uri[1])) {
+            $module = explode('.', ucfirst($uri[0]));
+            $controller = explode('.', ucfirst($uri[1]));
+            $class = '\\' . $module[0] . '\\Controller\\' . $controller[0] . 'Controller';
+            $this->controller = $class;
+        }
+    }
+
+    public function getControllerConfig() {
+        return array(
+            'invokables' => array(
+                $this->controller => $this->controller
+            )
+        );
     }
 
     public function finishJsonStrategy($e) {
@@ -52,7 +68,6 @@ class Module {
 
     public function setResponseType(MvcEvent $e) {
         if ($this->config['jsonStrategy']) {
-
             $request = $e->getRequest();
             $headers = $request->getHeaders();
             $uri = $e->getRequest()->getUri()->getPath();

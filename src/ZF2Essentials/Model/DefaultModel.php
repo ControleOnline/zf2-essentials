@@ -43,22 +43,22 @@ class DefaultModel {
     }
 
     public function edit(array $params) {
-        if (isset($params['id']))
+        if (isset($params['id'])) {
             $entity = $this->entity->find($params['id']);
-        if ($entity) {
-            $entity = $this->setData($entity, $params);
-            $this->em->persist($entity);
-            $this->em->flush();
-            return true;
-        } else {
-            return false;
+            if (isset($entity) && $entity) {
+                $entity = $this->setData($entity, $params);
+                $this->em->persist($entity);
+                $this->em->flush();
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 
     public function insert(array $params) {
-        $class = $this->entity_name;
-        $entity = new $class;
-        $entity = $this->setData($entity, $params);
+        $class = new $this->entity_name;
+        $entity = $this->setData($class, $params);
         $this->em->persist($entity);
         $this->em->flush();
         return array('id' => $entity->getId());

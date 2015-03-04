@@ -30,7 +30,7 @@ class DefaultController extends AbstractActionController {
         return $this->em;
     }
 
-    public function indexAction() {
+    public function indexAction() {              
         try {
             $allowed_methods = array('GET', 'POST', 'PUT', 'DELETE');
             $method_request = strtoupper($this->params()->fromQuery('method') ? : $_SERVER['REQUEST_METHOD']);

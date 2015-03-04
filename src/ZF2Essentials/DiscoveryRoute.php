@@ -49,8 +49,8 @@ class DiscoveryRoute {
         $defaultRoute = $this->getDefaultRoute();
         $module = $this->camelCase((isset($routes[0]) ? str_replace('.json', '', $routes[0]) : $defaultRoute['module']));
         $class_name = $this->camelCase((isset($routes[1]) ? str_replace('.json', '', $routes[1]) : $defaultRoute['controller']));
-        $controller = $this->formarClass($class_name, 'Controller', $module);
-
+        $controller = $this->formarClass($class_name, 'Controller', $module) . 'Controller';
+        
         if (class_exists($controller)) {
             $this->setModule($module);
             $this->setController($controller);
