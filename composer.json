@@ -5,9 +5,9 @@
     "homepage": "http://controleonline.com/",
     "type": "library",
     "keywords": [
-        "html",
-        "compress",
-        "minify"
+        "rest",
+        "restfull",
+        "api"
     ],
     "autoload": {
         "psr-4": {
@@ -23,6 +23,8 @@
     },
     "require": {
         "php": ">=5.5",
-        "zendframework/zendframework": "~2.0"        
+        "zendframework/zendframework": "~2.0",     
+        "controleonline/speed-up-essentials": "*",
+        "controleonline/rest-essentials": "*"
     }
 }
