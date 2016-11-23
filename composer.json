@@ -22,8 +22,6 @@
         "component-dir": "public/components"
     },
     "require": {
-        "php": ">=5.5",
-        "zendframework/zendframework": "~2.0",     
         "controleonline/speed-up-essentials": "*",
         "controleonline/rest-essentials": "*"
     }
