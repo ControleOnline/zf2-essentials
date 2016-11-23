@@ -23,6 +23,7 @@
     },
     "require": {
         "controleonline/speed-up-essentials": "*",
-        "controleonline/rest-essentials": "*"
+        "controleonline/rest-essentials": "*",
+        "controleonline/speed-up-essentials": "*"
     }
 }
